@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>スケジュール編集</title>
+    <link rel="stylesheet" href="../static/style.css"> <!-- ホームページと同じスタイルを使用 -->
+</head>
+<body>
+    <div class="container">
+        <h1>スケジュール編集</h1>
+        <form method="POST" action="/update_todo">
+            <input type="hidden" name="id" value="{{ todo.id }}">
+
+            <table>
+                <tr>
+                    <th class="title"><label>スケジュール名:</label></th>
+                    <td><input type="text" name="title" value="{{ todo.title or '' }}" required></td>
+                </tr>
+
+                <tr>
+                    <th class="content"><label>詳細:</label></th>
+                    <td><textarea name="content" placeholder="詳細">{{ todo.content or '' }}</textarea></td>
+                </tr>
+
+                <tr>
+                    <th class="limit"><label>日時:</label></th>
+                    <td><input type="datetime-local" name="limit" value="{{ todo.deadline.strftime('%Y-%m-%dT%H:%M') if todo.deadline else '' }}" ></td>
+                </tr>
+
+                <tr>
+                    <th class="category"><label>カテゴリ</label></th>
+                    <td>
+                        <select name="category" id="category" class="custom-select">
+                            <option value="課題">課題</option>
+                            <option value="アルバイト">アルバイト</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>  
+
+            <div>
+                <input type="submit" value="更新">
+            </div>
+        </form>
+
+        <div>
+            <input type="button" onclick="location.href='/'" value="戻る" class="btn">
+        </div>
+    </div>
+</body>
+</html>

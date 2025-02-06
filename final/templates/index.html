@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>スケジュール管理アプリ</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>スケジュール管理アプリ</h1>
+            <div>
+                <a href="/?category=課題">課題</a> |
+                <a href="/?category=アルバイト">アルバイト</a> |
+                <a href="/?category=その他">その他</a> |
+                <a href="/">全て</a>
+            </div>
+        <form method="POST" action="/add" action="/calendar">
+
+            <table>
+                <tr>
+                    <th class="title"><label>スケジュール名</label></th>
+                    <td><input type="text" name="title" id="title" placeholder="スケジュール名" required></td>
+                </tr>
+
+                <tr>
+                    <th class="content"><label>詳細</label></th>
+                    <td><textarea name="content" placeholder="詳細" ></textarea></td>
+                </tr>
+
+                <tr>
+                    <th class="limit"><label>日時</label></th>
+                    <td><input type="datetime-local" name="limit" id="limit" ></td>
+                </tr>
+
+                <tr>
+                    <th class="category"><label for="category">カテゴリ</label></th>
+                    <td>
+                        <select name="category" id="category" class="custom-select">
+                            <option value="課題">課題</option>
+                            <option value="アルバイト">アルバイト</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>  
+        
+                <div>
+                    <input type="submit" onclick="saveDate()" value="追加">
+                </div>
+
+                <script>
+                    async function saveDate() {
+                        let title = document.getElementById("title").value;
+                        let content = document.getElementById("content").value;
+                        let datetime = document.getElementById("limit").value;
+                        let category = document.getElementById("category").value;
+                    
+                        let response = await fetch("/add_todo", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ title: title, content: content, date: limit , category: category })
+                        });
+
+                        if (response.ok) {
+                            window.location.href = "/calendar"; // カレンダー画面へ移動
+                        } 
+        }
+
+                </script>
+        
+        </form>
+
+        <ul>
+            <h2>スケジュール一覧</h2>
+            {% for todo in todo_list %}
+            <ul id="latest-todos"></ul>
+            <li>
+                <strong>{{ todo.title or "（無題）" }}</strong><br>
+                詳細: {{ todo.content or "なし" }}<br>
+                日時: {{ todo.limit or "未設定" }}<br>
+                カテゴリ: {{ todo.category or "未設定"}}
+
+                <form method="POST" action="/delete/{{ todo.id }}">
+                    <input type="button" onclick="location.href='/edit/{{ todo.id }}'" value="編集" class="btn2">
+                    <button type="submit">削除</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+            
+        <input type="button" onclick="location.href='/calendar'" value="カレンダーを見る" class="btn">
+
+
+    </div>
+</body>
+</html>
